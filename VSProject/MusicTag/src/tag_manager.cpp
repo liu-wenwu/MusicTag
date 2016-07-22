@@ -88,6 +88,9 @@ namespace musictag{
 	{
 		std::ofstream ofs(file, std::ios::binary | std::ios::trunc );
 
+		if (p_id3v2_tag)
+			p_id3v2_tag->write(ofs);
+
 		ofs.write(&content[0], content.size());
 
 		if (p_id3v11_tag)

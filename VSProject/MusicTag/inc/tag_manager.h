@@ -33,6 +33,9 @@ namespace musictag{
 			_title = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::TITLE, str);
+
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_item(ID3V2_TITLE, str);
 		}
 		std::string title() const{
 			return _title;
@@ -42,6 +45,8 @@ namespace musictag{
 			_artist = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::ARTIST, str);
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_item(ID3V2_ARTIST, str);
 		}
 		std::string artist() const{
 			return _artist;
@@ -53,6 +58,8 @@ namespace musictag{
 			_album = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::ALBUM, str);
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_item(ID3V2_ALBUM, str);
 		}
 
 		void  set_comment(const std::string &str){
@@ -64,11 +71,15 @@ namespace musictag{
 			_year = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::YEAR, str);
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_item(ID3V2_YEAR, str);
 		}
 		void  set_track(const std::string &str){
 			_year = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::TRACK, str);
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_item(ID3V2_TRACK, str);
 		}
 
 		std::shared_ptr<id3v11_tag> get_id3v11_tag() const{

@@ -50,6 +50,19 @@ namespace musictag{
 		unsigned char Flags;
 		unsigned char Size[4];
 
+		id3v2_raw_header()
+		{
+			Identifier[0] = 'I';
+			Identifier[1] = 'D';
+			Identifier[2] = '3';
+			Version[0] = 4;
+			Version[1] = 0;
+			Flags = 0;
+			Size[0] = Size[1] =
+				Size[2] = Size[3] = 0;
+		}
+
+
 	}id3v2_raw_header;
 
 	typedef struct id3v2_raw_extended_header
@@ -68,6 +81,18 @@ namespace musictag{
 		unsigned char  Size[4];
 		unsigned char  Flags[2];
 		std::vector<char> data;
+
+
+		id3v2_raw_frame()
+		{};
+		id3v2_raw_frame(const std::string& id)
+		{
+			ID[0] = id[0];
+			ID[1] = id[1];
+			ID[2] = id[2];
+			ID[3] = id[3];
+		};
+
 	}id3v2_raw_frame;
 
 
@@ -110,7 +135,7 @@ namespace musictag{
 								  iconv_utils::convert("UTF-16BE", "GB2312", std::string(data, len), str);
 							  break;
 		}
-		
+
 		case ID3V2_UTF8:
 			iconv_utils::convert("UYF-8", "GB2312", std::string(data, len), str);
 			break;
@@ -276,11 +301,73 @@ namespace musictag{
 
 	void id3v2_tag::set_item(id3v2_id id, const std::string &v)
 	{
-	
-	
-	
+		switch (id)
+		{
+		case ID3V2_TITLE:
+			if (frames.find(id) == frames.end())
+			{
+				frames[id] = std::make_shared<id3v2_text_frame>(id, v);
+			}
+			else
+			{
+				id3v2_text_frame *frame = dynamic_cast<id3v2_text_frame *>(frames[id].get());
+				if (frame)
+					frame->set_text(v);
+			}
+			break;
+		default:
+			break;
+		}
+
+
 	}
 
+
+
+	void get_size(unsigned int size,unsigned char sizestr[4])
+	{
+		sizestr[0] = (size >> 24) & 0xff;
+		sizestr[1] = (size >> 16) & 0xff;
+		sizestr[2] = (size >> 8) & 0xff;
+		sizestr[3] = (size >> 0) & 0xff;
+	}
+
+	void id3v2_text_frame::write(std::ofstream &os)
+	{
+		id3v2_raw_frame frame(tid);
+		std::string outstr;
+		iconv_utils::convert("GB2312", "UTF16LE", str, outstr);
+		outstr.append('\0');
+		outstr.append('\0');
+		int size = outstr.size() + 1;//+codec
+		get_size(size, frame.Size);
+
+		os.write((char*)&frame,10);
+		unsigned char codec = 1;
+
+		os.write((char*)&codec, 1);
+
+		os.write(&outstr[0],outstr.size());
+
+	}
+
+
+
+
+	void id3v2_tag::write(std::ofstream &os)
+	{
+		int start_pos = os.tellp();
+		struct id3v2_raw_header header;
+		os.write((char*)&header, sizeof(struct id3v2_raw_header));
+		int frame_pos = os.tellp();
+
+		std::unordered_map<id3v2_id, std::shared_ptr<id3v2_frame> >::iterator iter = frames.begin();
+		for (; iter != frames.end(); ++iter)
+		{
+			iter->second->write(os);
+		}
+
+	}
 
 
 }

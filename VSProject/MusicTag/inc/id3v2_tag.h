@@ -71,6 +71,8 @@ namespace musictag{
 		{}
 		virtual void parse(const std::vector<char> &data){};
 		virtual void print(std::ostream &os){};
+
+		virtual void write(std::ofstream &os){};
 	protected:
 		std::string tid;
 	};
@@ -84,6 +86,15 @@ namespace musictag{
 		{
 			parse(data);
 		}
+		id3v2_text_frame(const std::string &id, const std::string &data) :id3v2_frame(id), str(data)
+		{
+		}
+		void set_text(const std::string &data)
+		{
+			str = data;
+		}
+		
+		virtual void write(std::ofstream &os);
 
 	private:
 
@@ -140,6 +151,8 @@ namespace musictag{
 		~id3v2_tag();
 		bool read(std::istream &is) override;
 		static bool detect(std::istream &is);
+
+		void write(std::ofstream &os);
 
 		friend std::ostream & operator<<(std::ostream &os, const id3v2_tag& tag)
 		{
