@@ -20,6 +20,7 @@ namespace musictag{
 		bool load(const std::string &file);
 		bool load(std::istream &is);
 
+		bool reload();
 		bool unload();
 
 		bool is_loaded() const{
@@ -38,7 +39,7 @@ namespace musictag{
 		void set_artist(const std::string &str){
 			_artist = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->
+				p_id3v11_tag->set_artist(str);
 		}
 		std::string artist() const{
 			return _artist;
@@ -69,6 +70,7 @@ namespace musictag{
 		unsigned long content_end;
 
 		std::vector<char> content;
+		std::string filepath;
 		/**/
 		std::string  _title;
 		std::string  _artist;

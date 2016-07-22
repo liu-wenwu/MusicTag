@@ -90,11 +90,27 @@ namespace musictag{
 			str = std::string(data, len);
 			break;
 		case ID3V2_UTF16LE:
-			iconv_utils::convert("UTF-16LE", "GB2312", std::string(data, len), str);
-			break;
+		{
+							  unsigned short flag = *(unsigned short*)data;
+
+							  if (flag == 0xfeff)
+								  iconv_utils::convert("UTF-16", "GB2312", std::string(data, len), str);
+							  else
+								  iconv_utils::convert("UTF-16LE", "GB2312", std::string(data, len), str);
+
+							  break;
+		}
 		case ID3V2_UTF16BE:
-			iconv_utils::convert("UTF-16BE", "GB2312", std::string(data, len), str);
-			break;
+		{
+							  unsigned short flag = *(unsigned short*)data;
+
+							  if (flag == 0xfffe)
+								  iconv_utils::convert("UTF-16", "GB2312", std::string(data, len), str);
+							  else
+								  iconv_utils::convert("UTF-16BE", "GB2312", std::string(data, len), str);
+							  break;
+		}
+		
 		case ID3V2_UTF8:
 			iconv_utils::convert("UYF-8", "GB2312", std::string(data, len), str);
 			break;

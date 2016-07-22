@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-
+#include <algorithm>
 
 
 namespace musictag{
@@ -50,11 +50,19 @@ namespace musictag{
 			return sizeof(ID3V11_RAW_HEAD);
 		}
 
+		void strcopy(char *dst, const std::string &src, int max)
+		{
+			memcpy(dst, src.c_str(), max<src.size() ?max : src.size());
+		}
+
 		void set_artist(const std::string &v)
 		{
 			artist = v;
+			if (head)
+				strcopy(head->Artist, artist.c_str(),30);
 		}
 
+		void write(std::ofstream &os);
 		id3v11_tag();
 		~id3v11_tag();
 	private:

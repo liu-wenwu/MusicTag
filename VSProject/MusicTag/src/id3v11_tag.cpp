@@ -240,4 +240,13 @@ namespace musictag{
 	
 	}
 
+
+	void id3v11_tag::write(std::ofstream &os)
+	{
+		
+		os.write((char *)head.get(), id3v1_head_size);
+		printf("写入id3v1:%u",os.tellp());
+	}
+
+
 }

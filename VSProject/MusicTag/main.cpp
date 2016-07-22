@@ -114,7 +114,12 @@ bool cmd_clear()
 	system("cls");
 	return true;
 }
-
+bool cmd_save()
+{
+	manager.save();
+	manager.reload();
+	return true;
+}
 void cmd_invaild(const std::string &cmd)
 {
 	std::cout << cmd << " is invaild" << std::endl;
@@ -124,10 +129,13 @@ std::unordered_map<std::string, cmd_func> cmd_map = {
 	std::make_pair("help", cmd_help),
 	std::make_pair("clear", cmd_clear),
 	std::make_pair("edit", cmd_edit),
+	std::make_pair("save", cmd_save),
 };
 
 int main(int argc, char* argv[])
 {
+
+
 	/*
 	if (argc != 2)
 	{
@@ -151,7 +159,7 @@ int main(int argc, char* argv[])
 
 	manager.load(filepath);*/
 
-	manager.load("F:/Music/卡洛儿-假如爱有天意.mp3");
+	manager.load("C:/CloudMusic/江珊 - 梦里水乡.mp3");
 	std::cout << "-------    the tag info   ---------" << std::endl;
 	manager.print_tags();
 
@@ -176,4 +184,6 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
+
 

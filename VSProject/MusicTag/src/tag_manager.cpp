@@ -14,7 +14,7 @@ namespace musictag{
 		bool ret = load(ifs);
 
 		ifs.close();
-
+		filepath = file;
 		return ret;
 	}
 
@@ -51,7 +51,12 @@ namespace musictag{
 			content_end = p_id3v11_tag->get_size();
 
 
+		
+
 		content_size = file_size - content_start - content_end;
+		printf("%x -> %x\n", content_start, content_size);
+
+
 		content.resize(content_size);
 		is.seekg(content_start,std::ios::beg);
 		is.read(&content[0], content_size);
@@ -80,18 +85,31 @@ namespace musictag{
 	}
 
 
-	void save(const std::string &file)
+	void tag_manager::save(const std::string &file)
 	{
-		std::ofstream ofs(file, std::ios::binary | std::ios::trunc);
+		std::ofstream ofs(file, std::ios::binary | std::ios::trunc );
 
+		printf("Ð´Èëcontent:%x", content[0]);
 
+		ofs.write(&content[0], content.size());
+
+		if (p_id3v11_tag)
+			p_id3v11_tag->write(ofs);
+
+		ofs.close();
 	}
 
 
-	void save()
+	void tag_manager::save()
 	{
-	
-	
+		save(filepath);
 	}
+
+
+	bool tag_manager::reload()
+	{
+		return load(filepath);
+	}
+
 
 }
