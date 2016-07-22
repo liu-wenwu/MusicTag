@@ -152,6 +152,8 @@ namespace musictag{
 			return size + 10;
 		}
 
+
+		void set_item(id3v2_id id, const std::string &v);
 	private:
 
 		int subversion;//id3v2.x

@@ -7,7 +7,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-
+#include <sstream>
 
 namespace musictag{
 
@@ -24,12 +24,24 @@ namespace musictag{
 			char Year[4];
 			char Comment[28];
 			char Reserved;
-			char Track;
+			unsigned char Track;
 			unsigned char Genre;
 		}ID3V11_RAW_HEAD;
 
-	public:
 
+
+
+	public:
+		enum IDV311_ITEM
+		{
+			TITLE,
+			ARTIST,
+			ALBUM,
+			YEAR,
+			COMMENT,
+			TRACK,
+			GENRE
+		};
 		static bool detect(std::istream &is);
 
 		bool read(std::istream &is) override;
@@ -52,15 +64,10 @@ namespace musictag{
 
 		void strcopy(char *dst, const std::string &src, int max)
 		{
-			memcpy(dst, src.c_str(), max<src.size() ?max : src.size());
+			memcpy(dst, src.c_str(), max < src.size() ? max : src.size());
 		}
 
-		void set_artist(const std::string &v)
-		{
-			artist = v;
-			if (head)
-				strcopy(head->Artist, artist.c_str(),30);
-		}
+		void set_item(IDV311_ITEM item, const std::string &v);
 
 		void write(std::ofstream &os);
 		id3v11_tag();
@@ -81,8 +88,8 @@ namespace musictag{
 		std::string album;
 		std::string year;
 		std::string comment;
-		char track;
-		unsigned char genre;
+		int track;
+		int genre;
 	};
 
 

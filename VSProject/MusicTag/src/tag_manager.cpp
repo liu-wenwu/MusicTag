@@ -54,7 +54,6 @@ namespace musictag{
 		
 
 		content_size = file_size - content_start - content_end;
-		printf("%x -> %x\n", content_start, content_size);
 
 
 		content.resize(content_size);
@@ -88,8 +87,6 @@ namespace musictag{
 	void tag_manager::save(const std::string &file)
 	{
 		std::ofstream ofs(file, std::ios::binary | std::ios::trunc );
-
-		printf("–¥»Îcontent:%x", content[0]);
 
 		ofs.write(&content[0], content.size());
 

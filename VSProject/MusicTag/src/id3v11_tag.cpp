@@ -245,8 +245,57 @@ namespace musictag{
 	{
 		
 		os.write((char *)head.get(), id3v1_head_size);
-		printf("写入id3v1:%u",os.tellp());
+
 	}
 
+	void id3v11_tag::set_item(IDV311_ITEM item, const std::string &v)
+	{
+		switch (item)
+		{
+		case TITLE:
+			title = v;
+			if (head)
+				strcopy(head->Title, title.c_str(), 30);
+			break;
+		case ARTIST:
+			artist = v;
+			if (head)
+				strcopy(head->Artist, artist.c_str(), 30);
+			break;
+		case ALBUM:
+			album = v;
+			if (head)
+				strcopy(head->Album, album.c_str(), 30);
+			break;
+		case YEAR:
+			year = v;
+			if (head)
+				strcopy(head->Year, year.c_str(), 4);
+			break;
+		case COMMENT:
+			comment = v;
+			if (head)
+				strcopy(head->Comment, comment.c_str(), 28);
+			break;
+		case TRACK:
+		{
+					  std::stringstream ss;
+					  ss << v;
+					  ss >> track;
+					  head->Track = track;
+					  break;
+		}
 
+		case GENRE:
+		{
+					  std::stringstream ss;
+					  ss << v;
+					  ss >> genre;
+					  head->Genre = genre;
+					  break;
+		}
+
+		}
+
+	}
 }

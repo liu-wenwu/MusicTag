@@ -273,4 +273,14 @@ namespace musictag{
 		return ok;
 	}
 
+
+	void id3v2_tag::set_item(id3v2_id id, const std::string &v)
+	{
+	
+	
+	
+	}
+
+
+
 }
