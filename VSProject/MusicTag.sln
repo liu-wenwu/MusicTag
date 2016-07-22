@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MusicTag", "MusicTag\MusicTag.vcxproj", "{7E2DD1CD-E892-4BA5-A9E7-A57390D61CE6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34515618-6D61-4B8D-AAC9-6D8FA65BE847} = {34515618-6D61-4B8D-AAC9-6D8FA65BE847}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iconv", "iconv\iconv.vcxproj", "{34515618-6D61-4B8D-AAC9-6D8FA65BE847}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E2DD1CD-E892-4BA5-A9E7-A57390D61CE6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E2DD1CD-E892-4BA5-A9E7-A57390D61CE6}.Debug|Win32.Build.0 = Debug|Win32
+		{7E2DD1CD-E892-4BA5-A9E7-A57390D61CE6}.Release|Win32.ActiveCfg = Release|Win32
+		{7E2DD1CD-E892-4BA5-A9E7-A57390D61CE6}.Release|Win32.Build.0 = Release|Win32
+		{34515618-6D61-4B8D-AAC9-6D8FA65BE847}.Debug|Win32.ActiveCfg = Debug|Win32
+		{34515618-6D61-4B8D-AAC9-6D8FA65BE847}.Debug|Win32.Build.0 = Debug|Win32
+		{34515618-6D61-4B8D-AAC9-6D8FA65BE847}.Release|Win32.ActiveCfg = Release|Win32
+		{34515618-6D61-4B8D-AAC9-6D8FA65BE847}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
