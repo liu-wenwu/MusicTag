@@ -9,9 +9,9 @@
 
 typedef int id3v2_id;
 
-#define ID3V2_MAKE_ID(a,b,c,d) ( a<< 4| b<<2 | c<<1 |d )
+#define ID3V2_MAKE_ID(a,b,c,d) ( a<< 24| b<<16| c<<8 |d )
 
-#define ID3V2_GET_ID(a) ( a[0]<< 4| a[1]<<2 | a[2]<<1 |a[3] )
+#define ID3V2_GET_ID(a) ( a[0]<< 24| a[1]<<16 | a[2]<<8 |a[3] )
 
 
 /*
@@ -21,31 +21,31 @@ typedef int id3v2_id;
 */
 
 /* 标题 */
-#define ID3V2_TITLE			ID3V2_MAKE_ID('T','I','T','2') 
+const int ID3V2_TITLE = ID3V2_MAKE_ID('T', 'I', 'T', '2');
 /* 专辑 */
-#define ID3V2_ALBUM			ID3V2_MAKE_ID('T','A','L','B') 
+const int  ID3V2_ALBUM = ID3V2_MAKE_ID('T', 'A', 'L', 'B');
 /* 艺术家 */
-#define ID3V2_ARTIST		ID3V2_MAKE_ID('T','P','E','1') 
+const int  ID3V2_ARTIST = ID3V2_MAKE_ID('T', 'P', 'E', '1');
 /* 专辑艺人 */
-#define ID3V2_ALBUMARTIST	ID3V2_MAKE_ID('T','P','E','2') 
+const int  ID3V2_ALBUMARTIST = ID3V2_MAKE_ID('T', 'P', 'E', '2');
 /* 年份 */
-#define ID3V2_YEAR			ID3V2_MAKE_ID('T','Y','E','R') 
+const int  ID3V2_YEAR = ID3V2_MAKE_ID('T', 'Y', 'E', 'R');
 /* 日期 */
-#define ID3V2_DATE			ID3V2_MAKE_ID('T','D','A','T') 
+const int  ID3V2_DATE = ID3V2_MAKE_ID('T', 'D', 'A', 'T');
 /* 作曲家 */
-#define ID3V2_COMPOSER		ID3V2_MAKE_ID('T','C','O','M') 
+const int ID3V2_COMPOSER = ID3V2_MAKE_ID('T', 'C', 'O', 'M');
 /* 光盘编号 */
-#define ID3V2_DISCNUMBER	ID3V2_MAKE_ID('T','P','O','S') 
+const int ID3V2_DISCNUMBER = ID3V2_MAKE_ID('T', 'P', 'O', 'S');
 /* 编码器 */
-#define ID3V2_ENCODER		ID3V2_MAKE_ID('T','E','N','C') 
+const int ID3V2_ENCODER = ID3V2_MAKE_ID('T', 'E', 'N', 'C');
 /* 分类 */
-#define ID3V2_CONTENTTYPE	ID3V2_MAKE_ID('T','C','O','N') 
+const int ID3V2_CONTENTTYPE = ID3V2_MAKE_ID('T', 'C', 'O', 'N');
 /* 音轨 */
-#define ID3V2_TRACK	ID3V2_MAKE_ID('T','R','C','K') 
+const int ID3V2_TRACK = ID3V2_MAKE_ID('T', 'R', 'C', 'K');
 /* 备注 */
-#define ID3V2_COMMENT		ID3V2_MAKE_ID('C','O','M','M') 
+const int ID3V2_COMMENT = ID3V2_MAKE_ID('C', 'O', 'M', 'M');
 /* 专辑图片 */
-#define ID3V2_PICTURE		ID3V2_MAKE_ID('A','P','I','C') 
+const int ID3V2_PICTURE = ID3V2_MAKE_ID('A', 'P', 'I', 'C');
 
 /*
 
@@ -86,13 +86,37 @@ namespace musictag{
 		{
 			parse(data);
 		}
-		id3v2_text_frame(const std::string &id, const std::string &data) :id3v2_frame(id), str(data)
+		id3v2_text_frame(const std::string &id, const std::string &data) :id3v2_frame(id), text(data)
 		{
 		}
 		void set_text(const std::string &data)
 		{
-			str = data;
+			text = data;
 		}
+
+		virtual void write(std::ofstream &os);
+
+	private:
+
+		void parse(const std::vector<char> &data) override;
+		void print(std::ostream &os) override
+		{
+			os << tid << " : " << text << std::endl;
+		};
+		std::string text;
+	};
+
+
+
+	class id3v2_comment_frame :public id3v2_frame
+	{
+
+	public:
+		id3v2_comment_frame(const std::string &id, const std::vector<char> &data) :id3v2_frame(id)
+		{
+			parse(data);
+		}
+		
 		
 		virtual void write(std::ofstream &os);
 
@@ -101,10 +125,12 @@ namespace musictag{
 		void parse(const std::vector<char> &data) override;
 		void print(std::ostream &os) override
 		{
-			os << tid << " : " << str << std::endl;
+			os << tid << " : " << short_text << std::endl;
 		};
-		std::string str;
+		std::string short_text;
+		std::string full_text;
 	};
+
 
 	class id3v2_url_frame :public id3v2_frame
 	{
@@ -134,11 +160,11 @@ namespace musictag{
 		char pic_type;
 		std::string desc;
 		std::vector<char> pic_data;
-	
+
 		void parse(const std::vector<char> &data) override;
 		void print(std::ostream &os) override
 		{
-			os << tid << " : mime(" << mime << "),desc(" << desc << ") size(" << pic_data .size()<< ")" << std::endl;
+			os << tid << " : mime(" << mime << "),desc(" << desc << ") size(" << pic_data.size() << ")" << std::endl;
 		};
 	};
 

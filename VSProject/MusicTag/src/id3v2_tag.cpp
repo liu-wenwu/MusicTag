@@ -15,6 +15,8 @@ namespace musictag{
 
 #define getTagSize(x) (((unsigned int)x[0]<<21)+((unsigned int)x[1]<<14)+((unsigned int)x[2]<<7)+x[3])
 #define getFrameSize(x) (((unsigned int)x[0]<<24)+((unsigned int)x[1]<<16)+((unsigned int)x[2]<<8)+x[3])
+	
+
 
 
 	std::string PictureTypeStrings[21] =
@@ -55,7 +57,7 @@ namespace musictag{
 			Identifier[0] = 'I';
 			Identifier[1] = 'D';
 			Identifier[2] = '3';
-			Version[0] = 4;
+			Version[0] = 3;
 			Version[1] = 0;
 			Flags = 0;
 			Size[0] = Size[1] =
@@ -91,10 +93,24 @@ namespace musictag{
 			ID[1] = id[1];
 			ID[2] = id[2];
 			ID[3] = id[3];
+			Flags[0] = Flags[1] = 0;
 		};
 
 	}id3v2_raw_frame;
 
+
+	std::string get_codec_string(char c)
+	{
+		if (c == ID3V2_ISO88591)
+			return "ISO-8859-1";
+		else if (c == ID3V2_UTF16BE)
+			return "UTF-16BE";
+		else if (c == ID3V2_UTF16LE)
+			return "UTF-16LE";
+		else if (c == ID3V2_UTF8)
+			return "UTF-8";
+		else throw std::exception("can't get codec");
+	}
 
 
 	id3v2_tag::id3v2_tag()
@@ -147,7 +163,7 @@ namespace musictag{
 
 	void id3v2_text_frame::parse(const std::vector<char> &data)
 	{
-		str = get_string_codec(&data[1], data.size() - 1, data[0]);
+		text = get_string_codec(&data[1], data.size() - 1, data[0]);
 	}
 
 	/*
@@ -207,6 +223,47 @@ namespace musictag{
 	The actual text         <full text string according to encoding>
 
 	*/
+
+
+	void id3v2_comment_frame::parse(const std::vector<char> &data)
+	{
+		char codec = data[0];
+		std::string lang(&data[1],3);
+
+		
+		if (codec == ID3V2_ISO88591)
+		{
+			int mid = 4;
+			for (; mid < data.size() && data[mid]!='\0'; ++mid);
+			short_text = std::string(&data[4],mid-4);
+			full_text = std::string(&data[mid+1], data.size()-mid);
+		}
+		else
+		{
+			int mid = 4;
+			for (; mid < data.size() - 1 && (data[mid] != '\0' || data[mid+1] != '\0'); ++mid);
+			std::string short_str = std::string(&data[4], mid - 4);
+			std::string full_str = std::string(&data[mid + 2], data.size() - mid - 1);
+
+			iconv_utils::convert(get_codec_string(codec), "ISO-8859-1", short_str,short_text);
+			iconv_utils::convert(get_codec_string(codec), "ISO-8859-1", full_str, full_text);
+		}
+	}
+
+	void id3v2_comment_frame::write(std::ofstream &os)
+	{
+		char chead[4] = {0x00,'X','X','X'};
+
+		os.write(chead,4);
+		if (short_text.size() > 0)
+			os.write(short_text.c_str(), short_text.size());
+		os.write(chead, 1);
+		if (short_text.size() > 0)
+			os.write(short_text.c_str(), short_text.size());
+	}
+
+
+
 	bool id3v2_tag::read(std::istream &is)
 	{
 
@@ -258,9 +315,12 @@ namespace musictag{
 				switch (ID3V2_GET_ID(frame.ID))
 				{
 				case ID3V2_PICTURE:
-
 					frames.insert(make_pair(ID3V2_GET_ID(frame.ID), std::make_shared<id3v2_picture_frame>(id, frame.data)));
 					break;
+				case ID3V2_COMMENT:
+					frames.insert(make_pair(ID3V2_GET_ID(frame.ID), std::make_shared<id3v2_comment_frame>(id, frame.data)));
+					break;
+
 				}
 			}
 			sizecount += frameSize + 10;
@@ -298,15 +358,36 @@ namespace musictag{
 		return ok;
 	}
 
+	std::string id_to_string(id3v2_id id)
+	{
+		char str[4];
+		str[0] = (id >> 24) & 0xff;
+		str[1] = (id >> 16) & 0xff;
+		str[2] = (id >> 8) & 0xff;
+		str[3] = (id >> 0) & 0xff;
+		return std::string(str, 4);
+	}
 
 	void id3v2_tag::set_item(id3v2_id id, const std::string &v)
 	{
 		switch (id)
 		{
 		case ID3V2_TITLE:
+		case ID3V2_ALBUM:
+		case ID3V2_ARTIST:
+		case ID3V2_ALBUMARTIST:
+		case ID3V2_YEAR:
+		case ID3V2_DATE:
+		case ID3V2_COMPOSER:
+		case ID3V2_ENCODER:
+		case ID3V2_CONTENTTYPE:
+		case ID3V2_TRACK:
+
+
 			if (frames.find(id) == frames.end())
 			{
-				frames[id] = std::make_shared<id3v2_text_frame>(id, v);
+
+				frames[id] = std::make_shared<id3v2_text_frame>(id_to_string(id), v);
 			}
 			else
 			{
@@ -324,7 +405,7 @@ namespace musictag{
 
 
 
-	void get_size(unsigned int size,unsigned char sizestr[4])
+	void get_size(unsigned int size, unsigned char sizestr[4])
 	{
 		sizestr[0] = (size >> 24) & 0xff;
 		sizestr[1] = (size >> 16) & 0xff;
@@ -332,22 +413,33 @@ namespace musictag{
 		sizestr[3] = (size >> 0) & 0xff;
 	}
 
+
+	void get_tag_size(unsigned int size, unsigned char sizestr[4])
+	{
+		sizestr[0] = (size >> 21) & 0xff;
+		sizestr[1] = (size >> 14) & 0xff;
+		sizestr[2] = (size >> 7) & 0xff;
+		sizestr[3] = (size >> 0) & 0xff;
+	}
+
+	//getTagSize(x) (((unsigned int)x[0]<<21)+((unsigned int)x[1]<<14)+((unsigned int)x[2]<<7)+x[3])
+
 	void id3v2_text_frame::write(std::ofstream &os)
 	{
+		std::cout << tid << ":" << text << std::endl;
 		id3v2_raw_frame frame(tid);
 		std::string outstr;
-		iconv_utils::convert("GB2312", "UTF16LE", str, outstr);
-		outstr.append('\0');
-		outstr.append('\0');
+		iconv_utils::convert("GB2312", "UTF-16LE", text, outstr);
+		outstr += "\0\0";
 		int size = outstr.size() + 1;//+codec
 		get_size(size, frame.Size);
 
-		os.write((char*)&frame,10);
+		os.write((char*)&frame, 10);
 		unsigned char codec = 1;
 
 		os.write((char*)&codec, 1);
 
-		os.write(&outstr[0],outstr.size());
+		os.write(&outstr[0], outstr.size());
 
 	}
 
@@ -365,7 +457,20 @@ namespace musictag{
 		for (; iter != frames.end(); ++iter)
 		{
 			iter->second->write(os);
+
+
+
+
 		}
+
+		int frame_end = os.tellp();
+		int size = frame_end - frame_pos;
+
+		get_tag_size(size, header.Size);
+
+		os.seekp(start_pos, std::ios::beg);
+		os.write((char*)&header, sizeof(struct id3v2_raw_header));
+		os.seekp(frame_end, std::ios::beg);
 
 	}
 

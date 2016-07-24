@@ -102,7 +102,8 @@ namespace musictag{
 
 	void tag_manager::save()
 	{
-		save(filepath);
+		std::string tmp = filepath + ".mp3";
+		save(tmp);
 	}
 
 
