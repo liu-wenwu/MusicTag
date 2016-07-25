@@ -112,6 +112,24 @@ namespace musictag{
 		else throw std::exception("can't get codec");
 	}
 
+	void get_size(unsigned int size, unsigned char sizestr[4])
+	{
+		sizestr[0] = (size >> 24) & 0xff;
+		sizestr[1] = (size >> 16) & 0xff;
+		sizestr[2] = (size >> 8) & 0xff;
+		sizestr[3] = (size >> 0) & 0xff;
+	}
+
+
+	void get_tag_size(unsigned int size, unsigned char sizestr[4])
+	{
+		sizestr[0] = (size >> 21) & 0xff;
+		sizestr[1] = (size >> 14) & 0xff;
+		sizestr[2] = (size >> 7) & 0xff;
+		sizestr[3] = (size >> 0) & 0xff;
+	}
+
+
 
 	id3v2_tag::id3v2_tag()
 	{
@@ -227,6 +245,7 @@ namespace musictag{
 
 	void id3v2_comment_frame::parse(const std::vector<char> &data)
 	{
+
 		char codec = data[0];
 		std::string lang(&data[1],3);
 
@@ -236,7 +255,7 @@ namespace musictag{
 			int mid = 4;
 			for (; mid < data.size() && data[mid]!='\0'; ++mid);
 			short_text = std::string(&data[4],mid-4);
-			full_text = std::string(&data[mid+1], data.size()-mid);
+			full_text = std::string(&data[mid+1], data.size()-mid-1);
 		}
 		else
 		{
@@ -252,15 +271,29 @@ namespace musictag{
 
 	void id3v2_comment_frame::write(std::ofstream &os)
 	{
+		
+		std::cout << tid << ":" << full_text << std::endl;
+		id3v2_raw_frame frame(tid);
+
+		int size = 4 + short_text.size() + 1 + full_text.size();
+		get_size(size, frame.Size);
+		
+		printf("%d	%d\n", size,full_text.size());
+		
+		os.write((char*)&frame, 10);
+		
+		
 		char chead[4] = {0x00,'X','X','X'};
 
 		os.write(chead,4);
 		if (short_text.size() > 0)
 			os.write(short_text.c_str(), short_text.size());
 		os.write(chead, 1);
-		if (short_text.size() > 0)
-			os.write(short_text.c_str(), short_text.size());
+		if (full_text.size() > 0)
+			os.write(full_text.c_str(), full_text.size());
+	
 	}
+
 
 
 
@@ -382,8 +415,6 @@ namespace musictag{
 		case ID3V2_ENCODER:
 		case ID3V2_CONTENTTYPE:
 		case ID3V2_TRACK:
-
-
 			if (frames.find(id) == frames.end())
 			{
 
@@ -396,6 +427,21 @@ namespace musictag{
 					frame->set_text(v);
 			}
 			break;
+
+		case ID3V2_COMMENT:
+
+			if (frames.find(id) == frames.end())
+			{
+				frames[id] = std::make_shared<id3v2_comment_frame>(id_to_string(id), v);
+			}
+			else
+			{
+				id3v2_comment_frame *frame = dynamic_cast<id3v2_comment_frame *>(frames[id].get());
+				if (frame)
+					frame->set_text(v);
+			}
+			break;
+
 		default:
 			break;
 		}
@@ -405,24 +451,9 @@ namespace musictag{
 
 
 
-	void get_size(unsigned int size, unsigned char sizestr[4])
-	{
-		sizestr[0] = (size >> 24) & 0xff;
-		sizestr[1] = (size >> 16) & 0xff;
-		sizestr[2] = (size >> 8) & 0xff;
-		sizestr[3] = (size >> 0) & 0xff;
-	}
 
 
-	void get_tag_size(unsigned int size, unsigned char sizestr[4])
-	{
-		sizestr[0] = (size >> 21) & 0xff;
-		sizestr[1] = (size >> 14) & 0xff;
-		sizestr[2] = (size >> 7) & 0xff;
-		sizestr[3] = (size >> 0) & 0xff;
-	}
 
-	//getTagSize(x) (((unsigned int)x[0]<<21)+((unsigned int)x[1]<<14)+((unsigned int)x[2]<<7)+x[3])
 
 	void id3v2_text_frame::write(std::ofstream &os)
 	{
@@ -457,10 +488,6 @@ namespace musictag{
 		for (; iter != frames.end(); ++iter)
 		{
 			iter->second->write(os);
-
-
-
-
 		}
 
 		int frame_end = os.tellp();

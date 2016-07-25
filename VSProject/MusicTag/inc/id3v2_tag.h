@@ -116,7 +116,14 @@ namespace musictag{
 		{
 			parse(data);
 		}
-		
+		id3v2_comment_frame(const std::string &id, const std::string &data) :id3v2_frame(id), full_text(data)
+		{
+		}
+		void set_text(const std::string &data)
+		{
+			full_text = data;
+		}
+
 		
 		virtual void write(std::ofstream &os);
 

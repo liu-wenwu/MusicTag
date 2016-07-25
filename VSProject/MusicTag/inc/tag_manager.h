@@ -66,6 +66,9 @@ namespace musictag{
 			_comment = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::COMMENT, str);
+
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_item(ID3V2_COMMENT, str);
 		}
 		void  set_year(const std::string &str){
 			_year = str;
