@@ -13,18 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\ID3V1">
+      <UniqueIdentifier>{8b0b11be-8232-4261-88fa-2089426b0ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ID3V2">
+      <UniqueIdentifier>{befa4324-645f-404f-a24d-9dd064c69cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\ID3V!">
+      <UniqueIdentifier>{fc463ccf-b9c1-43f4-b4a1-0d266f089945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\ID3V2">
+      <UniqueIdentifier>{edcd51c2-0b02-49f6-95e2-535e8b9e1c82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tag.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\id3v11_tag.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\id3v2_tag.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="inc\iconv_utils.h">
@@ -36,14 +42,32 @@
     <ClInclude Include="inc\tag_manager.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="inc\id3v1\id3v11_tag.h">
+      <Filter>头文件\ID3V!</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2_tag.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2_comment_frame.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2_frame.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2_picture_frame.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2_text_frame.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2_url_frame.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\id3v2\id3v2.h">
+      <Filter>头文件\ID3V2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\id3v11_tag.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\id3v2_tag.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\iconv_utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -52,6 +76,27 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v1\id3v11_tag.cpp">
+      <Filter>源文件\ID3V1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v2\id3v2_tag.cpp">
+      <Filter>源文件\ID3V2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v2\id3v2_comment_frame.cpp">
+      <Filter>源文件\ID3V2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v2\id3v2_frame.cpp">
+      <Filter>源文件\ID3V2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v2\id3v2_picture_frame.cpp">
+      <Filter>源文件\ID3V2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v2\id3v2_text_frame.cpp">
+      <Filter>源文件\ID3V2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v2\id3v2_url_frame.cpp">
+      <Filter>源文件\ID3V2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

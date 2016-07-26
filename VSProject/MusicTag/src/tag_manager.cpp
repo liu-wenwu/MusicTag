@@ -21,7 +21,7 @@ namespace musictag{
 
 	bool tag_manager::load(std::istream &is)
 	{
-		is.seekg(0,std::ios::end);
+		is.seekg(0, std::ios::end);
 		file_size = is.tellg();
 
 
@@ -33,7 +33,7 @@ namespace musictag{
 
 			p_id3v11_tag = std::make_shared<id3v11_tag>();
 			p_id3v11_tag->read(is);
-			
+
 		}
 
 		if (id3v2_tag::detect(is))
@@ -44,20 +44,20 @@ namespace musictag{
 
 		}
 
-	
+
 		if (p_id3v2_tag)
 			content_start = p_id3v2_tag->get_size();
 		if (p_id3v11_tag)
 			content_end = p_id3v11_tag->get_size();
 
 
-		
+
 
 		content_size = file_size - content_start - content_end;
 
 
 		content.resize(content_size);
-		is.seekg(content_start,std::ios::beg);
+		is.seekg(content_start, std::ios::beg);
 		is.read(&content[0], content_size);
 
 	}
@@ -70,7 +70,7 @@ namespace musictag{
 			return false;
 
 		p_id3v11_tag.reset();
-	
+
 		return true;
 	}
 
@@ -86,15 +86,21 @@ namespace musictag{
 
 	void tag_manager::save(const std::string &file)
 	{
-		std::ofstream ofs(file, std::ios::binary | std::ios::trunc );
+		std::ofstream ofs(file, std::ios::binary | std::ios::trunc);
 
 		if (p_id3v2_tag)
+		{
 			p_id3v2_tag->write(ofs);
+			std::cout << "write id3v2 ok" << std::endl;
+		}
 
 		ofs.write(&content[0], content.size());
 
 		if (p_id3v11_tag)
-			p_id3v11_tag->write(ofs);
+		{
+		//	p_id3v11_tag->write(ofs);
+			//std::cout << "write id3v1 ok" << std::endl;
+		}
 
 		ofs.close();
 	}

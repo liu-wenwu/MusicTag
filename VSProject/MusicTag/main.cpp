@@ -5,14 +5,13 @@
 #include <fstream>
 #include <unordered_map>
 
-#include "id3v11_tag.h"
-#include "id3v2_tag.h"
+
 #include "tag_manager.h"
 
 
 
 #define TAG_DEBUG 1
-#define TAG_DEBUG_FILE "C:/CloudMusic/Àîñ´¾ý - Óêµû.mp3"
+#define TAG_DEBUG_FILE "F:/Music/Disco.mp3"
 
 
 
@@ -56,7 +55,32 @@ void edit_track(const std::string & value)
 
 void edit_picture(const std::string & value)
 {
-	//	manager.set_picture(value);
+	
+	const std::vector<std::string> & types = musictag::id3v2_tag::get_picture_types();
+
+	for (int i = 0; i < types.size(); ++i)
+	{
+		std::cout << "[" << i << "]" << types[i] << std::endl;
+	}
+	std::cout << "picture types list as above,input the type number:";
+	int type = 0;
+	do
+	{
+		std::cin >> type;
+	} while (type < 0 && type >= types.size());
+
+	char buff[2014];
+
+	std::cout << "input description:";
+
+	std::string desc(buff);
+	while (std::cin.getline(buff, 1024))
+	{
+		if (desc.size()>0)
+			break;
+	}
+
+	manager.set_picture(value,type,desc);
 }
 
 std::unordered_map<std::string, edit_func> edit_map = {

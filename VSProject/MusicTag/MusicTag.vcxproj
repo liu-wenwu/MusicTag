@@ -85,8 +85,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\iconv_utils.h" />
-    <ClInclude Include="inc\id3v11_tag.h" />
-    <ClInclude Include="inc\id3v2_tag.h" />
+    <ClInclude Include="inc\id3v1\id3v11_tag.h" />
+    <ClInclude Include="inc\id3v2\id3v2.h" />
+    <ClInclude Include="inc\id3v2\id3v2_comment_frame.h" />
+    <ClInclude Include="inc\id3v2\id3v2_frame.h" />
+    <ClInclude Include="inc\id3v2\id3v2_picture_frame.h" />
+    <ClInclude Include="inc\id3v2\id3v2_tag.h" />
+    <ClInclude Include="inc\id3v2\id3v2_text_frame.h" />
+    <ClInclude Include="inc\id3v2\id3v2_url_frame.h" />
     <ClInclude Include="inc\tag_manager.h" />
     <ClInclude Include="inc\tag.h" />
     <ClInclude Include="inc\tag_exception.h" />
@@ -94,8 +100,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\iconv_utils.cpp" />
-    <ClCompile Include="src\id3v11_tag.cpp" />
-    <ClCompile Include="src\id3v2_tag.cpp" />
+    <ClCompile Include="src\id3v1\id3v11_tag.cpp" />
+    <ClCompile Include="src\id3v2\id3v2_comment_frame.cpp" />
+    <ClCompile Include="src\id3v2\id3v2_frame.cpp" />
+    <ClCompile Include="src\id3v2\id3v2_picture_frame.cpp" />
+    <ClCompile Include="src\id3v2\id3v2_tag.cpp" />
+    <ClCompile Include="src\id3v2\id3v2_text_frame.cpp" />
+    <ClCompile Include="src\id3v2\id3v2_url_frame.cpp" />
     <ClCompile Include="src\tag_manager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

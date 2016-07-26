@@ -1,8 +1,8 @@
 #ifndef __MUSICTAG_H__
 #define __MUSICTAG_H__
 
-#include "id3v11_tag.h"
-#include "id3v2_tag.h"
+#include "id3v1/id3v11_tag.h"
+#include "id3v2/id3v2_tag.h"
 
 #include <memory>
 
@@ -35,7 +35,8 @@ namespace musictag{
 				p_id3v11_tag->set_item(id3v11_tag::TITLE, str);
 
 			if (p_id3v2_tag)
-				p_id3v2_tag->set_item(ID3V2_TITLE, str);
+				p_id3v2_tag->set_text(ID3V2_TITLE, str);
+		
 		}
 		std::string title() const{
 			return _title;
@@ -46,7 +47,8 @@ namespace musictag{
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::ARTIST, str);
 			if (p_id3v2_tag)
-				p_id3v2_tag->set_item(ID3V2_ARTIST, str);
+				p_id3v2_tag->set_text(ID3V2_ARTIST, str);
+		
 		}
 		std::string artist() const{
 			return _artist;
@@ -59,7 +61,8 @@ namespace musictag{
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::ALBUM, str);
 			if (p_id3v2_tag)
-				p_id3v2_tag->set_item(ID3V2_ALBUM, str);
+				p_id3v2_tag->set_text(ID3V2_ALBUM,str);
+
 		}
 
 		void  set_comment(const std::string &str){
@@ -68,22 +71,30 @@ namespace musictag{
 				p_id3v11_tag->set_item(id3v11_tag::COMMENT, str);
 
 			if (p_id3v2_tag)
-				p_id3v2_tag->set_item(ID3V2_COMMENT, str);
+				p_id3v2_tag->set_comment(std::string(), str);
+	
 		}
 		void  set_year(const std::string &str){
 			_year = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::YEAR, str);
 			if (p_id3v2_tag)
-				p_id3v2_tag->set_item(ID3V2_YEAR, str);
+				p_id3v2_tag->set_text(ID3V2_YEAR, str);
+	
 		}
 		void  set_track(const std::string &str){
 			_year = str;
 			if (p_id3v11_tag)
 				p_id3v11_tag->set_item(id3v11_tag::TRACK, str);
 			if (p_id3v2_tag)
-				p_id3v2_tag->set_item(ID3V2_TRACK, str);
+				p_id3v2_tag->set_text(ID3V2_TRACK, str);
 		}
+
+		void  set_picture(const std::string &path, int type, const std::string &desc){
+			if (p_id3v2_tag)
+				p_id3v2_tag->set_picture(path,type,desc);
+		}
+
 
 		std::shared_ptr<id3v11_tag> get_id3v11_tag() const{
 			return p_id3v11_tag;
@@ -101,7 +112,7 @@ namespace musictag{
 		std::shared_ptr<id3v2_tag> p_id3v2_tag;
 		bool loaded;
 
-	
+
 		unsigned long file_size;
 		unsigned long content_size;
 		unsigned long content_start;
