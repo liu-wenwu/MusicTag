@@ -14,8 +14,7 @@ namespace musictag{
 
 #define ID3V2_GET_ID(a) ( a[0]<< 24| a[1]<<16 | a[2]<<8 |a[3] )
 
-#define getTagSize(x) (((unsigned int)x[0]<<21)+((unsigned int)x[1]<<14)+((unsigned int)x[2]<<7)+x[3])
-#define getFrameSize(x) (((unsigned int)x[0]<<24)+((unsigned int)x[1]<<16)+((unsigned int)x[2]<<8)+x[3])
+
 
 	/*
 

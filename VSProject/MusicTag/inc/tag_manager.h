@@ -1,9 +1,9 @@
 #ifndef __MUSICTAG_H__
 #define __MUSICTAG_H__
 
-#include "id3v1/id3v11_tag.h"
+#include "id3v1/id3v1_tag.h"
 #include "id3v2/id3v2_tag.h"
-
+#include "flac/flac_tag.h"
 #include <memory>
 
 namespace musictag{
@@ -27,12 +27,12 @@ namespace musictag{
 			return loaded;
 		}
 		void print_tags();
-
+		void save_picture(const std::string &path);
 
 		void set_title(const std::string &str){
 			_title = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->set_item(id3v11_tag::TITLE, str);
+				p_id3v11_tag->set_item(id3v1_tag::TITLE, str);
 
 			if (p_id3v2_tag)
 				p_id3v2_tag->set_text(ID3V2_TITLE, str);
@@ -45,7 +45,7 @@ namespace musictag{
 		void set_artist(const std::string &str){
 			_artist = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->set_item(id3v11_tag::ARTIST, str);
+				p_id3v11_tag->set_item(id3v1_tag::ARTIST, str);
 			if (p_id3v2_tag)
 				p_id3v2_tag->set_text(ID3V2_ARTIST, str);
 		
@@ -59,7 +59,7 @@ namespace musictag{
 		void set_album(const std::string &str){
 			_album = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->set_item(id3v11_tag::ALBUM, str);
+				p_id3v11_tag->set_item(id3v1_tag::ALBUM, str);
 			if (p_id3v2_tag)
 				p_id3v2_tag->set_text(ID3V2_ALBUM,str);
 
@@ -68,7 +68,7 @@ namespace musictag{
 		void  set_comment(const std::string &str){
 			_comment = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->set_item(id3v11_tag::COMMENT, str);
+				p_id3v11_tag->set_item(id3v1_tag::COMMENT, str);
 
 			if (p_id3v2_tag)
 				p_id3v2_tag->set_comment(std::string(), str);
@@ -77,7 +77,7 @@ namespace musictag{
 		void  set_year(const std::string &str){
 			_year = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->set_item(id3v11_tag::YEAR, str);
+				p_id3v11_tag->set_item(id3v1_tag::YEAR, str);
 			if (p_id3v2_tag)
 				p_id3v2_tag->set_text(ID3V2_YEAR, str);
 	
@@ -85,7 +85,7 @@ namespace musictag{
 		void  set_track(const std::string &str){
 			_year = str;
 			if (p_id3v11_tag)
-				p_id3v11_tag->set_item(id3v11_tag::TRACK, str);
+				p_id3v11_tag->set_item(id3v1_tag::TRACK, str);
 			if (p_id3v2_tag)
 				p_id3v2_tag->set_text(ID3V2_TRACK, str);
 		}
@@ -96,10 +96,10 @@ namespace musictag{
 		}
 
 
-		std::shared_ptr<id3v11_tag> get_id3v11_tag() const{
+		std::shared_ptr<id3v1_tag> get_id3v11_tag() const{
 			return p_id3v11_tag;
 		}
-		std::shared_ptr<id3v11_tag> get_id3v2_tag() const {
+		std::shared_ptr<id3v1_tag> get_id3v2_tag() const {
 			return p_id3v11_tag;
 		}
 
@@ -108,15 +108,17 @@ namespace musictag{
 		void save();
 
 	private:
-		std::shared_ptr<id3v11_tag> p_id3v11_tag;
+		std::shared_ptr<id3v1_tag> p_id3v11_tag;
 		std::shared_ptr<id3v2_tag> p_id3v2_tag;
+		std::shared_ptr<flac_tag> p_flac_tag;
+		
 		bool loaded;
 
 
-		unsigned long file_size;
-		unsigned long content_size;
-		unsigned long content_start;
-		unsigned long content_end;
+		std::streamsize file_size;
+		std::streamsize content_size;
+		std::streamoff content_start;
+		std::streamoff content_end;
 
 		std::vector<char> content;
 		std::string filepath;

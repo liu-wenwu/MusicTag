@@ -19,11 +19,23 @@
     <Filter Include="源文件\ID3V2">
       <UniqueIdentifier>{befa4324-645f-404f-a24d-9dd064c69cd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\ID3V!">
-      <UniqueIdentifier>{fc463ccf-b9c1-43f4-b4a1-0d266f089945}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\ID3V2">
       <UniqueIdentifier>{edcd51c2-0b02-49f6-95e2-535e8b9e1c82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\ID3V1">
+      <UniqueIdentifier>{fc463ccf-b9c1-43f4-b4a1-0d266f089945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\FLAC">
+      <UniqueIdentifier>{88dac502-263c-40ba-8b96-6c3492b4c937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\FLAC">
+      <UniqueIdentifier>{7838567d-d4e0-4052-9336-538a151dec52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\UTILS">
+      <UniqueIdentifier>{2797ff8c-d28a-4999-94ae-1f595147d1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\UTILS">
+      <UniqueIdentifier>{f78fdde2-cb54-4545-b201-f3cb88e6be76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,17 +45,11 @@
     <ClInclude Include="inc\tag.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="inc\iconv_utils.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="inc\tag_exception.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="inc\tag_manager.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\id3v1\id3v11_tag.h">
-      <Filter>头文件\ID3V!</Filter>
     </ClInclude>
     <ClInclude Include="inc\id3v2\id3v2_tag.h">
       <Filter>头文件\ID3V2</Filter>
@@ -66,19 +72,34 @@
     <ClInclude Include="inc\id3v2\id3v2.h">
       <Filter>头文件\ID3V2</Filter>
     </ClInclude>
+    <ClInclude Include="inc\id3v1\id3v1_tag.h">
+      <Filter>头文件\ID3V1</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\flac\flac_tag.h">
+      <Filter>头文件\FLAC</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\flac\flac_vorbis_comment.h">
+      <Filter>头文件\FLAC</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\flac\flac_picture.h">
+      <Filter>头文件\FLAC</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\utils\common_utils.h">
+      <Filter>头文件\UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\utils\iconv_utils.h">
+      <Filter>头文件\UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\utils\image_utils.h">
+      <Filter>头文件\UTILS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\iconv_utils.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\tag_manager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\id3v1\id3v11_tag.cpp">
-      <Filter>源文件\ID3V1</Filter>
     </ClCompile>
     <ClCompile Include="src\id3v2\id3v2_tag.cpp">
       <Filter>源文件\ID3V2</Filter>
@@ -97,6 +118,27 @@
     </ClCompile>
     <ClCompile Include="src\id3v2\id3v2_url_frame.cpp">
       <Filter>源文件\ID3V2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id3v1\id3v1_tag.cpp">
+      <Filter>源文件\ID3V1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\flac\flac_tag.cpp">
+      <Filter>源文件\FLAC</Filter>
+    </ClCompile>
+    <ClCompile Include="inc\flac\flac_vorbis_comment.cpp">
+      <Filter>源文件\FLAC</Filter>
+    </ClCompile>
+    <ClCompile Include="inc\flac\flac_picture.cpp">
+      <Filter>源文件\FLAC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\common_utils.cpp">
+      <Filter>源文件\UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\iconv_utils.cpp">
+      <Filter>源文件\UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\image_utils.cpp">
+      <Filter>源文件\UTILS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

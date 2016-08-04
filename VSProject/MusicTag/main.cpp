@@ -1,19 +1,17 @@
-
-
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
-
+#include <sstream>
 
 #include "tag_manager.h"
-
+#include "utils/iconv_utils.h"
 
 
 #define TAG_DEBUG 1
-#define TAG_DEBUG_FILE "F:/Music/Disco.mp3"
+#define TAG_DEBUG_FILE "F:/Music/flac.flac"
 
-
+//#define TAG_DEBUG_FILE "F:/Music/Disco.mp3"
 
 /*
 唯一全局变量
@@ -58,20 +56,27 @@ void edit_picture(const std::string & value)
 	
 	const std::vector<std::string> & types = musictag::id3v2_tag::get_picture_types();
 
-	for (int i = 0; i < types.size(); ++i)
+	for (unsigned int i = 0; i < types.size(); ++i)
 	{
 		std::cout << "[" << i << "]" << types[i] << std::endl;
 	}
 	std::cout << "picture types list as above,input the type number:";
-	int type = 0;
+	unsigned int type = 0;
+	char buff[1024];
+
 	do
 	{
-		std::cin >> type;
+		std::cin.getline(buff, 1024);
+		std::string type_str(buff);
+		std::stringstream ss;
+		ss << type_str;
+		ss >> type;
 	} while (type < 0 && type >= types.size());
 
-	char buff[2014];
+	
 
 	std::cout << "input description:";
+	
 
 	std::string desc(buff);
 	while (std::cin.getline(buff, 1024))
@@ -116,9 +121,14 @@ bool cmd_edit()
 		<< "line format:\n"
 		<< "item=value\n"
 		<< "eg. comment=this is a nice song!\n"
-		<< "[surpport item]\n"
-		<< "artist title album comment year track genre picture picdesc\n"
-		<< std::endl;
+		<< "[surpport item]"<< std::endl;
+
+	for (std::unordered_map<std::string, edit_func>::iterator iter = edit_map.begin(); iter != edit_map.end(); ++iter)
+	{
+		std::cout << iter->first << " ";
+	}
+
+	std::cout << std::endl;
 
 	char buff[2014];
 
@@ -180,7 +190,21 @@ bool cmd_list()
 
 	return true;
 }
+bool cmd_savepic()
+{
+	manager.save();
+	manager.reload();
+	std::cout << "input the folder:";
 
+	char buff[1024];
+	
+	std::cin.getline(buff, 1024);
+	std::string folder(buff);
+
+	manager.save_picture(folder);
+
+	return true;
+}
 void cmd_invaild(const std::string &cmd)
 {
 	std::cout << cmd << " is invaild" << std::endl;
@@ -192,6 +216,7 @@ std::unordered_map<std::string, cmd_func> cmd_map = {
 	std::make_pair("list", cmd_list),
 	std::make_pair("edit", cmd_edit),
 	std::make_pair("save", cmd_save),
+	std::make_pair("savepic", cmd_savepic),
 };
 
 int main(int argc, char* argv[])
@@ -222,7 +247,6 @@ int main(int argc, char* argv[])
 
 	manager.load(filepath);
 #endif
-
 
 
 	std::cout << "-------    the tag info   ---------" << std::endl;

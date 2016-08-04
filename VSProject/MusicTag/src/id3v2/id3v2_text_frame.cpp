@@ -1,5 +1,5 @@
 #include "id3v2/id3v2_text_frame.h"
-#include "iconv_utils.h"
+#include "utils/iconv_utils.h"
 
 
 namespace musictag{
@@ -9,16 +9,17 @@ namespace musictag{
 	void id3v2_text_frame::parse(const std::vector<char> &data)
 	{
 		text = get_string_by_codec(&data[1], data.size() - 1, data[0]);
+
 		encode();
 	}
 
 	void id3v2_text_frame::write(std::ostream &os)
 	{
-		std::cout << get_id_string(tid) << ":" << text << std::endl;
+		if (encode_text.empty())
+			return;
+
 		id3v2_raw_frame frame(tid);
-		std::string outstr;
-		iconv_utils::convert("GB2312", "UTF-16LE", text, outstr);
-		outstr += "\0\0";
+
 
 		get_frame_size(size(), frame.Size);
 
@@ -27,7 +28,8 @@ namespace musictag{
 
 		os.write((char*)&codec, 1);
 
-		os.write(&outstr[0], outstr.size());
+		os.write(&encode_text[0], encode_text.size());
+
 
 	}
 
@@ -40,13 +42,13 @@ namespace musictag{
 
 	int id3v2_text_frame::size()
 	{
-		return  10 + encode_text.size() + 1;
+		return  encode_text.size() + 1;
 	}
 
 	void id3v2_text_frame::encode()
 	{
-		if (!text.empty() && codec != ID3V2_ISO88591)
-			iconv_utils::convert(get_string_of_codec(ID3V2_ISO88591), get_string_of_codec(codec), text, encode_text);
+		if (!text.empty())
+			iconv_utils::convert("GB2312", get_string_of_codec(codec), text, encode_text);
 		else
 			encode_text = text;
 	}
